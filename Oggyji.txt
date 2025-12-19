@@ -1,0 +1,43 @@
+// Basic WhatsApp Bot using whatsapp-web.js
+// WARNING: Unofficial method. Number can get banned. Use at your own risk.
+
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+const client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+});
+
+client.on('qr', qr => {
+    console.log('QR CODE SCAN KAR:');
+    qrcode.generate(qr, { small: true });
+});
+
+client.on('ready', () => {
+    console.log('WhatsApp Bot READY 🔥');
+});
+
+client.on('message', async message => {
+    const msg = message.body.toLowerCase();
+
+    if (msg === 'hi' || msg === 'hello') {
+        message.reply('Hi! Hu WhatsApp Bot chu 🤖');
+    }
+
+    if (msg === 'time') {
+        const time = new Date().toLocaleTimeString();
+        message.reply(`Atyare time che: ${time}`);
+    }
+
+    if (msg === 'help') {
+        message.reply('Commands:\nhi / hello\ntime\nhelp');
+    }
+});
+
+client.initialize();
+
+/*
